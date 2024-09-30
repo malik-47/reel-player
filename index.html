@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Reel Player with Icons</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #reel-player {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Increased max-width for larger screens */
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        #reel-video {
+            width: 100%;
+            height: 100%; /* Set height to 100% to fill the parent */
+            background-color: black;
+            display: block;
+        }
+
+        /* Icon Styles */
+        .nav-icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 40px;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: color 0.3s;
+            z-index: 10;
+        }
+
+        /* Previous (left) icon */
+        .nav-icon.prev {
+            left: 10px; /* Adjust distance from the left edge */
+        }
+
+        /* Next (right) icon */
+        .nav-icon.next {
+            right: 10px; /* Adjust distance from the right edge */
+        }
+
+        /* Hover effect for icons */
+        .nav-icon:hover {
+            color: rgba(255, 255, 255, 1);
+        }
+
+        /* Disable click if at the first or last reel (optional styling) */
+        .nav-icon.disabled {
+            color: rgba(255, 255, 255, 0.3);
+            cursor: not-allowed;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 600px) {
+            #reel-player {
+                height: 100%; /* Full height on mobile */
+            }
+
+            #reel-video {
+                height: calc(100vh - 100px); /* Allow space for controls */
+            }
+
+            .nav-icon {
+                font-size: 30px;
+            }
+        }
+
+        @media (min-width: 600px) and (max-width: 900px) {
+            #reel-video {
+                height: 400px; /* Fixed height for medium screens */
+            }
+
+            .nav-icon {
+                font-size: 35px;
+            }
+        }
+
+        @media (min-width: 900px) {
+            #reel-video {
+                height: 500px; /* Fixed height for larger screens */
+            }
+
+            .nav-icon {
+                font-size: 40px;
+            }
+        }
+    </style>
+    <!-- Link to Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <div id="reel-player">
+        <video id="reel-video" controls autoplay muted></video>
+
+        <!-- Previous and Next icons -->
+        <div class="nav-icon prev">
+            <i class="fas fa-chevron-left"></i>
+        </div>
+        <div class="nav-icon next">
+            <i class="fas fa-chevron-right"></i>
+        </div>
+    </div>
+
+    <script>
+        // Array of reel video URLs (only 5 videos)
+        const reelVideos = [
+            'https://threadtter.com/wp-content/uploads/2024/09/video6.mp4',
+            'https://threadtter.com/wp-content/uploads/2024/09/video5.mp4',
+            'https://threadtter.com/wp-content/uploads/2024/09/video4.mp4',
+            'https://threadtter.com/wp-content/uploads/2024/09/video3.mp4',
+            'https://threadtter.com/wp-content/uploads/2024/09/Elon-Musk-Reacts-to-windows-breaking-on-Cybertruck.mp4'
+        ];
+
+        let currentReelIndex = 0;  // Start with the first reel
+
+        // Get video element and control icons
+        const videoElement = document.getElementById('reel-video');
+        const prevReelIcon = document.querySelector('.nav-icon.prev');
+        const nextReelIcon = document.querySelector('.nav-icon.next');
+
+        // Function to load a reel video
+        function loadReel(index) {
+            if (index >= 0 && index < reelVideos.length) {
+                videoElement.src = reelVideos[index];
+                videoElement.play();
+
+                // Enable/disable icons based on the current reel index
+                prevReelIcon.classList.toggle('disabled', index === 0);
+                nextReelIcon.classList.toggle('disabled', index === reelVideos.length - 1);
+            }
+        }
+
+        // Event listeners for "Previous" and "Next" icons
+        prevReelIcon.addEventListener('click', () => {
+            if (currentReelIndex > 0) {
+                currentReelIndex--;
+                loadReel(currentReelIndex);
+            }
+        });
+
+        nextReelIcon.addEventListener('click', () => {
+            if (currentReelIndex < reelVideos.length - 1) {
+                currentReelIndex++;
+                loadReel(currentReelIndex);
+            }
+        });
+
+        // Automatically load the first reel on page load
+        window.onload = () => {
+            loadReel(currentReelIndex);
+        };
+    </script>
+</body>
+</html>
